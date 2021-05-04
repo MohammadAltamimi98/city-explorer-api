@@ -1,9 +1,12 @@
 const express = require('express')
 const app = express()
 const weather = require('./data/weather.json')
+const cors= require ('cors')
 
+
+app.use(cors());
 app.get('/', function (req, res) {
-    res.send('Hello Worldd')
+    res.send('Hello World')
 })
 
 app.get('/weather', function (req, res) {
