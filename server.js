@@ -2,6 +2,10 @@ const express = require('express')
 const app = express()
 const weather = require('./data/weather.json')
 const cors= require ('cors')
+require('dotenv').config()
+
+
+const PORT=process.env.PORT || 8080
 
 
 app.use(cors());
@@ -21,8 +25,7 @@ class Weather {
     }
 }
 
-
-app.listen(3003)
+app.listen(PORT)
 
 // note: you will get an error if you use { in arrow functions like line 10} without any return statement 
 //The idea is that we are targeting the json file which we required earlier then we specified the data part of it then we mapped through it creating an instance [new Weather] at every object element .

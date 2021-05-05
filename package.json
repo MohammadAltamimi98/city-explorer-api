@@ -20,6 +20,7 @@
   "homepage": "https://github.com/MohammadAltamimi98/city-explorer-api#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^8.5.1",
     "express": "^4.17.1"
   }
 }
