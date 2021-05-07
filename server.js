@@ -23,19 +23,31 @@ app.get('/weather', function (req, res) {
             const weatherBitArray = weatherBitData.body.data.map(data => new Weather(data));
             res.send(weatherBitArray);
 
-        })
+        }).catch(console.error)
     }
     catch (error) {
         const newArray = weather.data.map(data => new Weather(data));
         res.send(newArray);
     }
-
+   
 
 
 })
 
 
+app.get('/movie',function(req,res)
+    {
+res.send('hello you')
+    })
 
+
+
+
+class Movie{
+    constructor(){
+
+    }
+}
 
 class Weather {
     constructor(data) {
