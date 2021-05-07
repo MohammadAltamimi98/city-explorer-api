@@ -1,13 +1,13 @@
 const express = require('express')
 const app = express()
 const weather = require('./data/weather.json')
-const cors= require ('cors')
+const cors = require('cors')
 require('dotenv').config()
 const superagent = require('superagent');
 
 
-const PORT=process.env.PORT || 8080
-const WEATHER_BIT_KEY=process.env.WEATHER_BIT_KEY
+const PORT = process.env.PORT || 8080
+const WEATHER_BIT_KEY = process.env.WEATHER_BIT_KEY
 
 
 app.use(cors());
@@ -17,13 +17,25 @@ app.get('/', function (req, res) {
 
 
 app.get('/weather', function (req, res) {
-const weatherBitUrl=`https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_BIT_KEY}&lat=${38.123}&lon=${-78.543}`;
-superagent.get(weatherBitUrl).then (data=>{
-    return res.send(data.body)
-}).catch(console.error);
-    
-    
+    try {
+        const weatherBitUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_BIT_KEY}&lat=${req.query.lat}&lon=${req.query.lon}`;
+        superagent.get(weatherBitUrl).then(weatherBitData => {
+            const weatherBitArray = weatherBitData.body.data.map(data => new Weather(data));
+            res.send(weatherBitArray);
+
+        })
+    }
+    catch (error) {
+        const newArray = weather.data.map(data => new Weather(data));
+        res.send(newArray);
+    }
+
+
+
 })
+
+
+
 
 class Weather {
     constructor(data) {
