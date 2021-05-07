@@ -4,10 +4,12 @@ const weather = require('./data/weather.json')
 const cors = require('cors')
 require('dotenv').config()
 const superagent = require('superagent');
+const { query } = require('express')
 
 
 const PORT = process.env.PORT || 8080
 const WEATHER_BIT_KEY = process.env.WEATHER_BIT_KEY
+const MOVIE_API_KEY=process.env.MOVIE_API_KEY
 
 
 app.use(cors());
@@ -16,7 +18,7 @@ app.get('/', function (req, res) {
 })
 
 
-app.get('/weather', function (req, res) {
+app.get('/weather',  function (req, res) {
     try {
         const weatherBitUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_BIT_KEY}&lat=${req.query.lat}&lon=${req.query.lon}`;
         superagent.get(weatherBitUrl).then(weatherBitData => {
@@ -30,21 +32,37 @@ app.get('/weather', function (req, res) {
         res.send(newArray);
     }
    
-
-
 })
 
 
-app.get('/movie',function(req,res)
-    {
-res.send('hello you')
+app.get('/movie',function(req,res){
+    try{
+        const movieUrl =`https://api.themoviedb.org/3/search/movie?api_key=${MOVIE_API_KEY}&query=${req.query.query}`;
+        
+        
+        superagent.get(movieUrl).then(movieDbData=>{
+            const movieArray=movieDbData.body.results.map(data=> new Movie(data));
+            
+            res.send(movieArray)
+
+        }).catch(console.error)
+       
+    }
+    catch(error){
+        console.log(error)
+    }
+
     })
 
 
 
 
 class Movie{
-    constructor(){
+    constructor(data){
+        this.title=data.original_title;
+        this.image='http://image.tmdb.org/t/p/w342'+data.poster_path;
+        this.releaseDate=data.release_date;
+        this.rating=data.vote_average;
 
     }
 }
