@@ -1,10 +1,11 @@
-const weather = require('./data/weather.json')
+const weather = require('../data/weather.json')
 require('dotenv').config()
 const superagent = require('superagent');
 const WEATHER_BIT_KEY = process.env.WEATHER_BIT_KEY
 
 
-function handleWeather (req, res) {
+
+function handleWeather(req, res) {
     try {
         const weatherBitUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_BIT_KEY}&lat=${req.query.lat}&lon=${req.query.lon}`;
         superagent.get(weatherBitUrl).then(weatherBitData => {
@@ -17,7 +18,7 @@ function handleWeather (req, res) {
         const newArray = weather.data.map(data => new Weather(data));
         res.send(newArray);
     }
-   
+
 }
 
 
@@ -29,4 +30,4 @@ class Weather {
     }
 }
 
-module.exports=handleWeather;
+module.exports = handleWeather;
