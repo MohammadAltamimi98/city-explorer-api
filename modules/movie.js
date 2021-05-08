@@ -1,27 +1,47 @@
 require('dotenv').config()
+const { query } = require('express');
 const superagent = require('superagent');
 const MOVIE_API_KEY = process.env.MOVIE_API_KEY
 
+const cacheMemory = require('./cacheMemory')
 
 function handleMovie(req, res) {
+
     try {
-        const movieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${MOVIE_API_KEY}&query=${req.query.query}`;
+        const movieUrl = `https://api.themoviedb.org/3/search/movie`;
+        const country = req.query.query;
+        const params = {
+            api_key: MOVIE_API_KEY,
+            query: country
+        };
+        console.log(cacheMemory);
 
 
 
-        superagent.get(movieUrl).then(movieDbData => {
-            const movieArray = movieDbData.body.results.map(data => new Movie(data));
+        if (cacheMemory[country]) {
+            console.log(' we got the movie from the cache');
 
-            res.send(movieArray)
+            res.status(200).send(cacheMemory[country])
+        }
 
-        }).catch(console.error)
+        else {
+            superagent.get(movieUrl).query(params).then(movieDbData => {
+                const movieArray = movieDbData.body.results.map(data => new Movie(data));
+                cacheMemory[country] = movieArray;
+                console.log(' we got the movie from the api');
+                res.send(movieArray)
+            })
+        }
 
 
     }
-    catch (error) {
-        console.log(error)
-    }
+    catch (error) { console.log(error) }
+
 }
+
+
+
+
 
 
 class Movie {
