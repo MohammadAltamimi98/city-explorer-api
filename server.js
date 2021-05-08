@@ -5,6 +5,7 @@ const cors = require('cors')
 require('dotenv').config()
 const superagent = require('superagent');
 const { query } = require('express')
+const weatherHandler= require('./components/weather')
 
 
 const PORT = process.env.PORT || 8080
@@ -18,21 +19,7 @@ app.get('/', function (req, res) {
 })
 
 
-app.get('/weather',  function (req, res) {
-    try {
-        const weatherBitUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_BIT_KEY}&lat=${req.query.lat}&lon=${req.query.lon}`;
-        superagent.get(weatherBitUrl).then(weatherBitData => {
-            const weatherBitArray = weatherBitData.body.data.map(data => new Weather(data));
-            res.send(weatherBitArray);
-
-        }).catch(console.error)
-    }
-    catch (error) {
-        const newArray = weather.data.map(data => new Weather(data));
-        res.send(newArray);
-    }
-   
-})
+app.get('/weather', weatherHandler )
 
 
 app.get('/movie',function(req,res){
@@ -64,13 +51,6 @@ class Movie{
         this.releaseDate=data.release_date;
         this.rating=data.vote_average;
 
-    }
-}
-
-class Weather {
-    constructor(data) {
-        this.date = data.valid_date;
-        this.description = data.weather.description;
     }
 }
 
