@@ -1,8 +1,8 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const weatherHandler = require('./components/weather')
-const movieHandler = require('./components/movie')
+const weatherHandler = require('./modules/weather')
+const movieHandler = require('./modules/movie')
 
 
 
