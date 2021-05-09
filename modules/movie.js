@@ -28,6 +28,7 @@ function handleMovie(req, res) {
             superagent.get(movieUrl).query(params).then(movieDbData => {
                 const movieArray = movieDbData.body.results.map(data => new Movie(data));
                 cacheMemory[country] = movieArray;
+                movieArray.length=12; // to set the array response we get to only 12 movies.
                 console.log(' we got the movie from the api');
                 res.send(movieArray)
             })
@@ -52,6 +53,7 @@ class Movie {
         this.rating = data.vote_average;
 
     }
+   
 }
 
 
